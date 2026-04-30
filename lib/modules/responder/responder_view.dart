@@ -185,52 +185,79 @@ class ResponderView extends StatelessWidget {
       case FieldType.multipleChoice:
         return Obx(() {
           final ans = controller.answers[field.id];
-          return DropdownButtonFormField<String>(
-            isExpanded: true,
-            decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Selecione uma opção...'),
-            value: (field.options ?? []).contains(ans) ? ans : null,
-            items: (field.options ?? []).map((opt) => DropdownMenuItem(
-              value: opt, 
-              child: Text(opt, overflow: TextOverflow.ellipsis)
-            )).toList(),
-            onChanged: (val) => controller.updateAnswer(field.id, val),
+          return Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: (field.options ?? []).map((opt) {
+              final isSelected = ans == opt;
+              return ChoiceChip(
+                label: Text(opt),
+                selected: isSelected,
+                selectedColor: Colors.teal.shade100,
+                onSelected: (selected) {
+                  controller.updateAnswer(field.id, selected ? opt : null);
+                },
+              );
+            }).toList(),
           );
         });
       case FieldType.checkbox:
         return Obx(() {
           final List<String> currentAns = List<String>.from(controller.answers[field.id] ?? []);
-          return Column(
-            children: (field.options ?? []).map((opt) => CheckboxListTile(
-              title: Text(opt),
-              value: currentAns.contains(opt),
-              onChanged: (val) => controller.updateCheckbox(field.id, opt, val ?? false),
-            )).toList(),
+          return Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: (field.options ?? []).map((opt) {
+              final isSelected = currentAns.contains(opt);
+              return FilterChip(
+                label: Text(opt),
+                selected: isSelected,
+                selectedColor: Colors.teal.shade100,
+                onSelected: (selected) => controller.updateCheckbox(field.id, opt, selected),
+              );
+            }).toList(),
           );
         });
       case FieldType.equipmentCheckboxList:
         return Obx(() {
           final eqs = Get.find<LookupService>().equipments;
           final List<String> currentAns = List<String>.from(controller.answers[field.id] ?? []);
-          return Column(
-            children: eqs.map((eq) => CheckboxListTile(
-              title: Text(eq['name']),
-              value: currentAns.contains(eq['name']),
-              onChanged: (val) => controller.updateCheckbox(field.id, eq['name'].toString(), val ?? false),
-            )).toList(),
+          return Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: eqs.map((eq) {
+              final name = eq['name'].toString();
+              final isSelected = currentAns.contains(name);
+              return FilterChip(
+                label: Text(name),
+                selected: isSelected,
+                selectedColor: Colors.teal.shade100,
+                onSelected: (selected) => controller.updateCheckbox(field.id, name, selected),
+              );
+            }).toList(),
           );
         });
       case FieldType.conditionRadioList:
         return Obx(() {
           final conditions = Get.find<LookupService>().conditions.map((c) => c['name'].toString()).toList();
           final ans = controller.answers[field.id];
-          return Column(
-            children: conditions.map((c) => RadioListTile<String>(
-              title: Text(c),
-              value: c,
-              groupValue: ans,
-              contentPadding: EdgeInsets.zero,
-              onChanged: (val) => controller.updateAnswer(field.id, val),
-            )).toList(),
+          return Wrap(
+            spacing: 8,
+            runSpacing: 8,
+            children: conditions.map((c) {
+              final isSelected = ans == c;
+              return ChoiceChip(
+                label: Text(c),
+                selected: isSelected,
+                selectedColor: isSelected 
+                  ? (c.toLowerCase().contains('certo') ? Colors.green.shade100 : 
+                     c.toLowerCase().contains('errado') ? Colors.red.shade100 : Colors.blue.shade100)
+                  : null,
+                onSelected: (selected) {
+                  controller.updateAnswer(field.id, selected ? c : null);
+                },
+              );
+            }).toList(),
           );
         });
       case FieldType.dynamicTable:
