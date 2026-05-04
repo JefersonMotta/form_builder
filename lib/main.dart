@@ -12,7 +12,8 @@ void main() async {
 
   await Supabase.initialize(
     url: 'https://sjnaxavgbzrcrwbcltip.supabase.co',
-    anonKey: 'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqbmF4YXZnYnpyY3J3YmNsdGlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIwODksImV4cCI6MjA5MzA0ODA4OX0.wACq9wiYzY-7zTb-rxvhzV2HB1aYGr2K42jtzahM65A',
+    anonKey:
+        'eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9.eyJpc3MiOiJzdXBhYmFzZSIsInJlZiI6InNqbmF4YXZnYnpyY3J3YmNsdGlwIiwicm9sZSI6ImFub24iLCJpYXQiOjE3Nzc0NzIwODksImV4cCI6MjA5MzA0ODA4OX0.wACq9wiYzY-7zTb-rxvhzV2HB1aYGr2K42jtzahM65A',
   );
 
   // Inicialização Global dos Serviços
@@ -30,7 +31,7 @@ class MyApp extends StatelessWidget {
   @override
   Widget build(BuildContext context) {
     return GetMaterialApp(
-      title: 'Safety Forms',
+      title: 'Painel de Inspeções',
       debugShowCheckedModeBanner: false,
       theme: ThemeData(
         colorScheme: ColorScheme.fromSeed(seedColor: Colors.teal),

@@ -257,7 +257,6 @@ class _ReportDashboardViewState extends State<ReportDashboardView> {
     final colaborador = _findValueByKeywords(answers, ['Colaborador', 'Nome', 'Inspetor', 'Funcionário']);
     final setor = _findValueByKeywords(answers, ['Setor', 'Fábrica', 'Departamento', 'Área']);
     final empresa = _findValueByKeywords(answers, ['Empresa', 'Unidade', 'Filial']);
-    if (empresa == 'N/A') empresa.replaceAll('N/A', 'K1-ERP'); // Default se não achar
 
     final rawDate = DateTime.parse(sub['date']);
     final formattedDate = DateFormat('dd/MM/yyyy HH:mm').format(rawDate);
@@ -427,5 +426,3 @@ class _ReportDashboardViewState extends State<ReportDashboardView> {
     );
   }
 }
-
-

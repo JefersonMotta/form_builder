@@ -1,4 +1,3 @@
-import 'dart:convert';
 import 'package:flutter/material.dart';
 import 'package:get/get.dart';
 import 'package:signature/signature.dart';
@@ -12,8 +11,8 @@ class ResponderView extends StatelessWidget {
   final FormModel form;
   final ResponderController controller;
 
-  ResponderView({super.key, required this.form}) 
-      : controller = Get.put(ResponderController(form), tag: form.id);
+  ResponderView({super.key, required this.form})
+    : controller = Get.put(ResponderController(form), tag: form.id);
 
   @override
   Widget build(BuildContext context) {
@@ -29,16 +28,25 @@ class ResponderView extends StatelessWidget {
           crossAxisAlignment: CrossAxisAlignment.start,
           children: [
             if (form.description.isNotEmpty) ...[
-              Text(form.description, style: const TextStyle(color: Colors.grey)),
+              Text(
+                form.description,
+                style: const TextStyle(color: Colors.grey),
+              ),
               const SizedBox(height: 24),
             ],
             ...form.fields.map((field) => _buildFieldWrapper(field)).toList(),
             const SizedBox(height: 24),
             if (form.requireSignature) ...[
-              const Text('Assinatura Responsável:', style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16)),
+              const Text(
+                'Assinatura Responsável:',
+                style: TextStyle(fontWeight: FontWeight.bold, fontSize: 16),
+              ),
               const SizedBox(height: 8),
               Container(
-                decoration: BoxDecoration(border: Border.all(color: Colors.grey), borderRadius: BorderRadius.circular(8)),
+                decoration: BoxDecoration(
+                  border: Border.all(color: Colors.grey),
+                  borderRadius: BorderRadius.circular(8),
+                ),
                 child: Column(
                   children: [
                     Signature(
@@ -52,7 +60,10 @@ class ResponderView extends StatelessWidget {
                         TextButton.icon(
                           onPressed: controller.clearSignature,
                           icon: const Icon(Icons.clear, color: Colors.red),
-                          label: const Text('Limpar', style: TextStyle(color: Colors.red)),
+                          label: const Text(
+                            'Limpar',
+                            style: TextStyle(color: Colors.red),
+                          ),
                         ),
                       ],
                     ),
@@ -65,9 +76,15 @@ class ResponderView extends StatelessWidget {
               width: double.infinity,
               height: 50,
               child: ElevatedButton(
-                style: ElevatedButton.styleFrom(backgroundColor: Colors.teal, foregroundColor: Colors.white),
+                style: ElevatedButton.styleFrom(
+                  backgroundColor: Colors.teal,
+                  foregroundColor: Colors.white,
+                ),
                 onPressed: controller.submitForm,
-                child: const Text('FINALIZAR E ENVIAR RELATÓRIO', style: TextStyle(fontWeight: FontWeight.bold)),
+                child: const Text(
+                  'FINALIZAR E ENVIAR RELATÓRIO',
+                  style: TextStyle(fontWeight: FontWeight.bold),
+                ),
               ),
             ),
             const SizedBox(height: 48),
@@ -97,20 +114,34 @@ class ResponderView extends StatelessWidget {
               children: [
                 Expanded(
                   child: Text(
-                    field.label, 
+                    field.label,
                     style: TextStyle(
-                      fontWeight: FontWeight.bold, 
+                      fontWeight: FontWeight.bold,
                       fontSize: 16,
                       color: hasError ? Colors.red : Colors.black,
-                    )
-                  )
+                    ),
+                  ),
                 ),
-                if (field.isRequired) const Text(' *', style: TextStyle(color: Colors.red, fontWeight: FontWeight.bold)),
+                if (field.isRequired)
+                  const Text(
+                    ' *',
+                    style: TextStyle(
+                      color: Colors.red,
+                      fontWeight: FontWeight.bold,
+                    ),
+                  ),
               ],
             ),
             if (hasError) ...[
               const SizedBox(height: 4),
-              const Text('Este campo é obrigatório', style: TextStyle(color: Colors.red, fontSize: 12, fontWeight: FontWeight.bold)),
+              const Text(
+                'Este campo é obrigatório',
+                style: TextStyle(
+                  color: Colors.red,
+                  fontSize: 12,
+                  fontWeight: FontWeight.bold,
+                ),
+              ),
             ],
             const SizedBox(height: 12),
             _buildInput(field),
@@ -124,13 +155,19 @@ class ResponderView extends StatelessWidget {
     switch (field.type) {
       case FieldType.text:
         return TextField(
-          decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Sua resposta...'),
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Sua resposta...',
+          ),
           onChanged: (val) => controller.updateAnswer(field.id, val),
         );
       case FieldType.longText:
         return TextField(
           maxLines: 3,
-          decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Detalhes...'),
+          decoration: const InputDecoration(
+            border: OutlineInputBorder(),
+            hintText: 'Detalhes...',
+          ),
           onChanged: (val) => controller.updateAnswer(field.id, val),
         );
       case FieldType.date:
@@ -139,7 +176,10 @@ class ResponderView extends StatelessWidget {
           return ListTile(
             title: Text(ans ?? 'Toque para selecionar data'),
             trailing: const Icon(Icons.calendar_today),
-            shape: RoundedRectangleBorder(side: BorderSide(color: Colors.grey.shade300), borderRadius: BorderRadius.circular(8)),
+            shape: RoundedRectangleBorder(
+              side: BorderSide(color: Colors.grey.shade300),
+              borderRadius: BorderRadius.circular(8),
+            ),
             onTap: () async {
               final date = await showDatePicker(
                 context: Get.context!,
@@ -148,7 +188,10 @@ class ResponderView extends StatelessWidget {
                 lastDate: DateTime(2100),
               );
               if (date != null) {
-                controller.updateAnswer(field.id, "${date.day.toString().padLeft(2,'0')}/${date.month.toString().padLeft(2,'0')}/${date.year}");
+                controller.updateAnswer(
+                  field.id,
+                  "${date.day.toString().padLeft(2, '0')}/${date.month.toString().padLeft(2, '0')}/${date.year}",
+                );
               }
             },
           );
@@ -156,29 +199,50 @@ class ResponderView extends StatelessWidget {
       case FieldType.employeeSearch:
         return Autocomplete<String>(
           optionsBuilder: (textValue) {
-            final employees = Get.find<EmployeeService>().colaboradores.map((e) => "${e.cracha} - ${e.nome}").toList();
+            final employees = Get.find<EmployeeService>().colaboradores
+                .map((e) => "${e.cracha} - ${e.nome}")
+                .toList();
             if (textValue.text.isEmpty) return const Iterable<String>.empty();
-            return employees.where((e) => e.toLowerCase().contains(textValue.text.toLowerCase()));
-          },
-          onSelected: (val) => controller.updateAnswer(field.id, val),
-          fieldViewBuilder: (context, textEditingController, focusNode, onFieldSubmitted) {
-            return TextField(
-              controller: textEditingController,
-              focusNode: focusNode,
-              decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Nome ou Crachá...', prefixIcon: Icon(Icons.badge)),
-              onChanged: (val) => controller.updateAnswer(field.id, val),
+            return employees.where(
+              (e) => e.toLowerCase().contains(textValue.text.toLowerCase()),
             );
           },
+          onSelected: (val) => controller.updateAnswer(field.id, val),
+          fieldViewBuilder:
+              (context, textEditingController, focusNode, onFieldSubmitted) {
+                return TextField(
+                  controller: textEditingController,
+                  focusNode: focusNode,
+                  decoration: const InputDecoration(
+                    border: OutlineInputBorder(),
+                    hintText: 'Nome ou Crachá...',
+                    prefixIcon: Icon(Icons.badge),
+                  ),
+                  onChanged: (val) => controller.updateAnswer(field.id, val),
+                );
+              },
         );
       case FieldType.departmentDropdown:
         return Obx(() {
-          final deps = Get.find<LookupService>().departments.map((d) => d['name'].toString()).toList();
+          final deps = Get.find<LookupService>().departments
+              .map((d) => d['name'].toString())
+              .toList();
           final ans = controller.answers[field.id];
           return DropdownButtonFormField<String>(
             isExpanded: true,
-            decoration: const InputDecoration(border: OutlineInputBorder(), hintText: 'Selecione...'),
+            decoration: const InputDecoration(
+              border: OutlineInputBorder(),
+              hintText: 'Selecione...',
+            ),
             value: deps.contains(ans) ? ans : null,
-            items: deps.map((d) => DropdownMenuItem(value: d, child: Text(d, overflow: TextOverflow.ellipsis))).toList(),
+            items: deps
+                .map(
+                  (d) => DropdownMenuItem(
+                    value: d,
+                    child: Text(d, overflow: TextOverflow.ellipsis),
+                  ),
+                )
+                .toList(),
             onChanged: (val) => controller.updateAnswer(field.id, val),
           );
         });
@@ -203,7 +267,9 @@ class ResponderView extends StatelessWidget {
         });
       case FieldType.checkbox:
         return Obx(() {
-          final List<String> currentAns = List<String>.from(controller.answers[field.id] ?? []);
+          final List<String> currentAns = List<String>.from(
+            controller.answers[field.id] ?? [],
+          );
           return Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -213,7 +279,8 @@ class ResponderView extends StatelessWidget {
                 label: Text(opt),
                 selected: isSelected,
                 selectedColor: Colors.teal.shade100,
-                onSelected: (selected) => controller.updateCheckbox(field.id, opt, selected),
+                onSelected: (selected) =>
+                    controller.updateCheckbox(field.id, opt, selected),
               );
             }).toList(),
           );
@@ -221,7 +288,9 @@ class ResponderView extends StatelessWidget {
       case FieldType.equipmentCheckboxList:
         return Obx(() {
           final eqs = Get.find<LookupService>().equipments;
-          final List<String> currentAns = List<String>.from(controller.answers[field.id] ?? []);
+          final List<String> currentAns = List<String>.from(
+            controller.answers[field.id] ?? [],
+          );
           return Wrap(
             spacing: 8,
             runSpacing: 8,
@@ -232,14 +301,17 @@ class ResponderView extends StatelessWidget {
                 label: Text(name),
                 selected: isSelected,
                 selectedColor: Colors.teal.shade100,
-                onSelected: (selected) => controller.updateCheckbox(field.id, name, selected),
+                onSelected: (selected) =>
+                    controller.updateCheckbox(field.id, name, selected),
               );
             }).toList(),
           );
         });
       case FieldType.conditionRadioList:
         return Obx(() {
-          final conditions = Get.find<LookupService>().conditions.map((c) => c['name'].toString()).toList();
+          final conditions = Get.find<LookupService>().conditions
+              .map((c) => c['name'].toString())
+              .toList();
           final ans = controller.answers[field.id];
           return Wrap(
             spacing: 8,
@@ -249,10 +321,13 @@ class ResponderView extends StatelessWidget {
               return ChoiceChip(
                 label: Text(c),
                 selected: isSelected,
-                selectedColor: isSelected 
-                  ? (c.toLowerCase().contains('certo') ? Colors.green.shade100 : 
-                     c.toLowerCase().contains('errado') ? Colors.red.shade100 : Colors.blue.shade100)
-                  : null,
+                selectedColor: isSelected
+                    ? (c.toLowerCase().contains('certo')
+                          ? Colors.green.shade100
+                          : c.toLowerCase().contains('errado')
+                          ? Colors.red.shade100
+                          : Colors.blue.shade100)
+                    : null,
                 onSelected: (selected) {
                   controller.updateAnswer(field.id, selected ? c : null);
                 },
@@ -262,7 +337,10 @@ class ResponderView extends StatelessWidget {
         });
       case FieldType.dynamicTable:
         return Obx(() {
-          final List<Map<String, dynamic>> rows = List<Map<String, dynamic>>.from(controller.answers[field.id] ?? []);
+          final List<Map<String, dynamic>> rows =
+              List<Map<String, dynamic>>.from(
+                controller.answers[field.id] ?? [],
+              );
           final columns = field.options ?? ['Item'];
           return Column(
             crossAxisAlignment: CrossAxisAlignment.start,
@@ -281,21 +359,52 @@ class ResponderView extends StatelessWidget {
                     final rowData = entry.value;
                     return DataRow(
                       cells: [
-                        ...columns.map((col) => DataCell(
-                          TextField(
-                            decoration: const InputDecoration(border: InputBorder.none),
-                            onChanged: (val) => controller.updateTableCell(field.id, rowIndex, col, val),
-                            controller: TextEditingController(text: (rowData[col] ?? '').toString())
-                              ..selection = TextSelection.fromPosition(TextPosition(offset: (rowData[col] ?? '').toString().length)),
+                        ...columns.map(
+                          (col) => DataCell(
+                            TextField(
+                              decoration: const InputDecoration(
+                                border: InputBorder.none,
+                              ),
+                              onChanged: (val) => controller.updateTableCell(
+                                field.id,
+                                rowIndex,
+                                col,
+                                val,
+                              ),
+                              controller:
+                                  TextEditingController(
+                                      text: (rowData[col] ?? '').toString(),
+                                    )
+                                    ..selection = TextSelection.fromPosition(
+                                      TextPosition(
+                                        offset: (rowData[col] ?? '')
+                                            .toString()
+                                            .length,
+                                      ),
+                                    ),
+                            ),
                           ),
-                        )),
-                        DataCell(IconButton(icon: const Icon(Icons.remove_circle, color: Colors.red), onPressed: () => controller.removeTableRow(field.id, rowIndex))),
+                        ),
+                        DataCell(
+                          IconButton(
+                            icon: const Icon(
+                              Icons.remove_circle,
+                              color: Colors.red,
+                            ),
+                            onPressed: () =>
+                                controller.removeTableRow(field.id, rowIndex),
+                          ),
+                        ),
                       ],
                     );
                   }).toList(),
                 ),
               ),
-              TextButton.icon(onPressed: () => controller.addTableRow(field.id, columns), icon: const Icon(Icons.add_circle), label: const Text('Adicionar Linha')),
+              TextButton.icon(
+                onPressed: () => controller.addTableRow(field.id, columns),
+                icon: const Icon(Icons.add_circle),
+                label: const Text('Adicionar Linha'),
+              ),
             ],
           );
         });

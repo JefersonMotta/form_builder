@@ -15,7 +15,7 @@ class HomeView extends StatelessWidget {
 
     return Scaffold(
       appBar: AppBar(
-        title: const Text('Painel de Inspeção (Safety Forms)'),
+        title: const Text('Painel de Inspeções'),
         centerTitle: true,
         backgroundColor: Colors.teal,
         foregroundColor: Colors.white,
@@ -165,5 +165,3 @@ class HomeView extends StatelessWidget {
     );
   }
 }
-
-// O _SpreadsheetView antigo foi removido pois agora usamos o ReportDashboardView
